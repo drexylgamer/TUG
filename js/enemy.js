@@ -15,7 +15,7 @@ class Enemy {
         const direction = new Vector2(dx, dy);
         direction.normalize();
         return direction;
-    }
+    };
 
     update(player, enemies) {
         // --- Chase Player ---
