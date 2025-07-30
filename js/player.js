@@ -1,5 +1,5 @@
 class Player {
-    constructor(x, y, speed, itemSlot1, itemSlot2, itemSlot3, itemSlot4) {
+    constructor(x, y, speed, itemSlot1, itemSlot2, itemSlot3, itemSlot4, health) {
         this.x=x
         this.y=y
         this.speed=speed
@@ -10,10 +10,15 @@ class Player {
         this.width=11
         this.height=18
         this.direction = Vector2.ZERO
+        this.health=10
     }
 
     update() {
-        // === Step 1: Build input vector ===
+        if(this.health <= 0) {
+            
+        }
+
+        // Build input vector
         let input = new Vector2(0, 0);
         if (keysPressed.has("w")) input.y -= 1;
         if (keysPressed.has("a")) input.x -= 1;
@@ -22,7 +27,6 @@ class Player {
 
         input.normalize();
 
-        // === Step 2: Apply acceleration and friction ===
         const ACCELERATION = 1.2;
         const FRICTION = 0.88;
         const MAX_SPEED = this.speed;
@@ -38,14 +42,14 @@ class Player {
         // Clamp to max speed
         this.direction.clampLength(MAX_SPEED);
 
-        // === Step 3: Predict new position ===
+        // Predict new position
         const nextX = this.x + this.direction.x;
         const nextY = this.y + this.direction.y;
 
         const halfW = (this.width * scaleFactor) / 2;
         const halfH = (this.height * scaleFactor) / 2;
 
-        // === Step 4: Apply canvas boundary collision ===
+        // Apply canvas boundary collision
         if (nextX - halfW >= 0 && nextX + halfW <= canvasSize) {
             this.x = nextX;
         } else {
@@ -72,5 +76,7 @@ class Player {
                 this.width*scaleFactor, 
                 this.height*scaleFactor)
         }
+        ctx.font = "50px \"Google Sans Code\", monospace";
+        ctx.fillText(this.health, 10, 50)
     }
 }
