@@ -12,12 +12,18 @@ const player = new Player(400, 400, playerMaxSpeed, null, null, null, null);
 // ------------
 
 window.addEventListener("keydown", (e) => {
-    keysPressed.add(e.key.toLowerCase());
-});
+    keysPressed.add(e.key.toLowerCase())
+})
 
 window.addEventListener("keyup", (e) => {
-    keysPressed.delete(e.key.toLowerCase());
-});
+    keysPressed.delete(e.key.toLowerCase())
+})
+window.addEventListener("contextmenu", (e) => {
+    e.preventDefault()
+})
+window.addEventListener("click", (e) => {
+    e.preventDefault()
+})
 
 // ------------
 // CANVAS
