@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans+Code:ital,wght@0,300..800;1,300..800&display=swap');
+
+body {
+    margin: 0;
+    background-color: #000;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #fff;
+    text-align: center;
+    font-family: "Google Sans Code", monospace;
+}
+
+h1 {
+    padding: 10px;
+}
+
+canvas {
+    background-color: #111;
+    border: 2px solid #555;
+}
+div {
+    top: 10px;
+}
