@@ -5,7 +5,7 @@
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
-const player = new Player(400, 400, playerSpeed, null, null, null, null);
+const player = new Player(400, 400, playerMaxSpeed, null, null, null, null);
 
 // ------------
 // INPUT

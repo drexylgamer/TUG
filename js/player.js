@@ -13,23 +13,52 @@ class Player {
     }
 
     update() {
-        // Reset the direction
-        this.direction.x = 0;
-        this.direction.y = 0;
+        // === Step 1: Build input vector ===
+        let input = new Vector2(0, 0);
+        if (keysPressed.has("w")) input.y -= 1;
+        if (keysPressed.has("a")) input.x -= 1;
+        if (keysPressed.has("s")) input.y += 1;
+        if (keysPressed.has("d")) input.x += 1;
 
-        // Check which keys have been pressed
-        if (keysPressed.has("w")&&this.y>=this.height*2) this.direction.y -= this.speed;
-        if (keysPressed.has("a")&&this.x>=this.width*2) this.direction.x -= this.speed;
-        if (keysPressed.has("s")&&this.y<=canvasSize-this.height*2) this.direction.y += this.speed;
-        if (keysPressed.has("d")&&this.x<=canvasSize-this.width*2) this.direction.x += this.speed;
+        input.normalize();
 
-        // Normalize the direction
-        this.direction.normalize();
+        // === Step 2: Apply acceleration and friction ===
+        const ACCELERATION = 1.2;
+        const FRICTION = 0.88;
+        const MAX_SPEED = this.speed;
 
-        // Update the position
-        this.x += this.direction.x;
-        this.y += this.direction.y;
+        // Accelerate in input direction
+        this.direction.x += input.x * ACCELERATION;
+        this.direction.y += input.y * ACCELERATION;
+
+        // Apply friction
+        this.direction.x *= FRICTION;
+        this.direction.y *= FRICTION;
+
+        // Clamp to max speed
+        this.direction.clampLength(MAX_SPEED);
+
+        // === Step 3: Predict new position ===
+        const nextX = this.x + this.direction.x;
+        const nextY = this.y + this.direction.y;
+
+        const halfW = (this.width * scaleFactor) / 2;
+        const halfH = (this.height * scaleFactor) / 2;
+
+        // === Step 4: Apply canvas boundary collision ===
+        if (nextX - halfW >= 0 && nextX + halfW <= canvasSize) {
+            this.x = nextX;
+        } else {
+            this.direction.x = 0;
+        }
+
+        if (nextY - halfH >= 0 && nextY + halfH <= canvasSize) {
+            this.y = nextY;
+        } else {
+            this.direction.y = 0;
+        }
     }
+
 
     render(ctx) {
         let image = new Image

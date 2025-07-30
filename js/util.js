@@ -2,24 +2,37 @@
 
 const scaleFactor = 4
 const canvasSize = 800
-const playerSpeed = 5
+
+const ACCELERATION = 0.6;
+const FRICTION = 0.9;
+const playerMaxSpeed = 80;
+const enemyMaxSpeed = 7;
 
 const keysPressed = new Set(); 
 
 class Vector2 {
     constructor(x, y) {
-        this.x = x
-        this.y = y
+        this.x = x;
+        this.y = y;
     }
 
-    // Normalize the Vector
+    static get ZERO() {
+        return new Vector2(0, 0);
+    }
+
     normalize() {
-        const length = Math.sqrt(this.x * this.x + this.y * this.y);
-        if (length !== 0) {
-            this.x = this.x / length * playerSpeed;
-            this.y = this.y / length * playerSpeed;
+        const length = Math.hypot(this.x, this.y);
+        if (length > 0) {
+            this.x /= length;
+            this.y /= length;
         }
     }
 
-    static ZERO = new Vector2(0, 0)
+    clampLength(max) {
+        const length = Math.hypot(this.x, this.y);
+        if (length > max) {
+            this.x = (this.x / length) * max;
+            this.y = (this.y / length) * max;
+        }
+    }
 }
