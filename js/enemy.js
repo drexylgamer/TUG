@@ -7,6 +7,8 @@ class Enemy {
         this.width=11
         this.height=18
         this.velocity = new Vector2(0, 0);
+        this.image = new Image
+        this.image.src = "./assets/enemy/enemy1.png";
     }
     
     getDirectionToPlayer(player) {
@@ -30,8 +32,8 @@ class Enemy {
         if (isColliding(this, player, false)) {
             const awayFromPlayer = new Vector2(this.x - player.x, this.y - player.y);
             awayFromPlayer.normalize();
-            this.velocity.x += awayFromPlayer.x * 3; // knockback strength
-            this.velocity.y += awayFromPlayer.y * 3;
+            this.velocity.x += awayFromPlayer.x * 5; // knockback strength
+            this.velocity.y += awayFromPlayer.y * 5;
             player.health -= 1
         }
 
@@ -59,18 +61,12 @@ class Enemy {
     }
 
     render(ctx) {
-        // let image = new Image
-        // image.src = "./assets/player/player1.png"
-        // image.onload = () => {
-        //    ctx.clearRect(0, 0, canvasSize, canvasSize)
-        //    ctx.drawImage(
-        //        image, 
-        //        this.x-this.width*scaleFactor/2, 
-        //        this.y-this.height*scaleFactor/2, 
-        //        this.width*scaleFactor, 
-        //        this.height*scaleFactor)
-        // }
-        ctx.fillStyle = "red"
-        ctx.fillRect(this.x-this.width*enemyScaleFactor/2,this.y-this.height*enemyScaleFactor/2, this.width*enemyScaleFactor, this.height*enemyScaleFactor)
+        ctx.drawImage(
+            this.image, 
+            this.x-this.width*enemyScaleFactor/2, 
+            this.y-this.height*enemyScaleFactor/2, 
+            this.width*enemyScaleFactor, 
+            this.height*enemyScaleFactor
+        )
     }
 }

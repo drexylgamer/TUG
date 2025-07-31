@@ -3,7 +3,7 @@
 const scaleFactor = 4
 const canvasSize = window.innerHeight
 const enemyAmount = 10
-const enemyScaleFactor = 1
+const enemyScaleFactor = 2
 
 const ACCELERATION = 2;
 const FRICTION = 0.8;
@@ -62,6 +62,8 @@ function isColliding(a, b, isEnemy) {
     );
 }
 
-function drawBar(percent) {
-
+function drawNumber(number, ctx) {
+    ctx.fillStyle = "blue";
+    ctx.font = "50px \"Google Sans Code\", monospace";
+    ctx.fillText(Math.round(number), 10, 50)
 }

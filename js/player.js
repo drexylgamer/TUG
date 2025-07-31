@@ -10,7 +10,8 @@ class Player {
         this.width=11
         this.height=18
         this.direction = Vector2.ZERO
-        this.health=10
+        this.health=health
+
     }
 
     update() {
@@ -75,8 +76,6 @@ class Player {
                 this.y-this.height*scaleFactor/2, 
                 this.width*scaleFactor, 
                 this.height*scaleFactor)
-        }
-        ctx.font = "50px \"Google Sans Code\", monospace";
-        ctx.fillText(this.health, 10, 50)
+            }
     }
 }
