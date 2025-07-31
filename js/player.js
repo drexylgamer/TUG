@@ -11,7 +11,8 @@ class Player {
         this.height=18
         this.direction = Vector2.ZERO
         this.health=health
-
+        this.itemInHand = itemSlot1 // Default item in hand
+        
     }
 
     update() {

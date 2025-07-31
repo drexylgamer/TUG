@@ -64,6 +64,6 @@ function isColliding(a, b, isEnemy) {
 
 function drawNumber(number, ctx) {
     ctx.fillStyle = "blue";
-    ctx.font = "50px \"Google Sans Code\", monospace";
+    ctx.font = "50px \"Bitcount Prop Single\", system-ui";
     ctx.fillText(Math.round(number), 10, 50)
 }

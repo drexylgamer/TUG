@@ -7,6 +7,7 @@ const ctx = canvas.getContext("2d");
 
 const player = new Player(400, 400, playerMaxSpeed, null, null, null, null, 100);
 var enemies = []
+var running = true;
 
 for(let i=0; i<enemyAmount; i++) {
     enemies.push(new Enemy(randomIntegerBetween(0, 800), randomIntegerBetween(0, 800), enemyMaxSpeed, i, 5))
