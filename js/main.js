@@ -53,7 +53,24 @@ function gameLoop() {
     }
     drawNumber(player.health, ctx);
 
-    requestAnimationFrame(gameLoop);
+    if (running==false) {
+        gameOver()
+    } else {
+        requestAnimationFrame(gameLoop);
+    }
 }
 
 gameLoop();
+
+function gameOver() {
+    ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "white";
+    ctx.font = "30px Arial";
+    ctx.fillText("Game Over", canvas.width / 2 - 70, canvas.height / 2);
+    requestAnimationFrame(gameOver)
+
+    addEventListener("click", () => {
+        location.reload();
+    });
+}

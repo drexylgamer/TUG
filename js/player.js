@@ -17,7 +17,7 @@ class Player {
 
     update() {
         if(this.health <= 0) {
-            
+            running = false;
         }
 
         // Build input vector
