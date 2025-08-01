@@ -20,6 +20,19 @@ class Player {
             running = false;
         }
 
+        if (keysPressed.has("1")) {
+            this.itemInHand = this.itemSlot1;
+        }
+        if (keysPressed.has("2")) {     
+            this.itemInHand = this.itemSlot2;
+        }
+        if (keysPressed.has("3")) {
+            this.itemInHand = this.itemSlot3;
+        }
+        if (keysPressed.has("4")) {
+            this.itemInHand = this.itemSlot4;
+        }
+
         // Build input vector
         let input = new Vector2(0, 0);
         if (keysPressed.has("w")) input.y -= 1;

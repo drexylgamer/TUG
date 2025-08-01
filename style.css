@@ -2,11 +2,10 @@
 
 body {
     margin: 0;
-    background-color: #000;
+    background-color: rgb(171, 171, 171);
     overflow: hidden;
     display: flex;
     justify-content: center;
-
     height: 100vh;
     color: #fff;
     text-align: center;
@@ -17,8 +16,9 @@ h1 {
     padding: 10px;
 }
 
-canvas {
-    background-color: #111;
+#canvas {
+    background-image: url("assets/other/background1.png");
+    background-size: cover;
     border: 2px solid #555;
 }
 div {

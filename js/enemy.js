@@ -9,6 +9,8 @@ class Enemy {
         this.velocity = new Vector2(0, 0);
         this.image = new Image
         this.image.src = "./assets/enemy/enemy1.png";
+        this.alive = true;
+        this.health = health;
     }
     
     getDirectionToPlayer(player) {
@@ -68,5 +70,17 @@ class Enemy {
             this.width*enemyScaleFactor, 
             this.height*enemyScaleFactor
         )
+        ctx.font = "12px Arial";
+        ctx.fillStyle = "white";
+        ctx.fillText(`Health: ${Math.round(this.health)}`, this.x - 20, this.y - 20);
+    }
+
+    takeDamage(amount) {
+        this.health -= amount;
+        console.log(`Enemy took ${amount} damage. Remaining health: ${this.health}`);
+
+        if (this.health <= 0) {
+            this.alive = false;
+        }
     }
 }
