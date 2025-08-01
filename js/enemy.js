@@ -77,8 +77,6 @@ class Enemy {
 
     takeDamage(amount) {
         this.health -= amount;
-        console.log(`Enemy took ${amount} damage. Remaining health: ${this.health}`);
-
         if (this.health <= 0) {
             this.alive = false;
         }

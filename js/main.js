@@ -4,6 +4,7 @@
 
 const teacup = new Item("Teacup", 3, 100, 500, 45); // 500ms cooldown
 const player = new Player(400, 400, playerMaxSpeed, teacup, null, null, null, 100); // Player starts with a teacup
+const body = document.querySelector("body");
 var enemies = []
 var running = true;
 var paused = false;
@@ -43,6 +44,23 @@ ctx.imageSmoothingEnabled = false;
 // ------------
 
 function gameLoop() {
+    const item = player.itemInHand;
+    if (item && item.attackCone && item.attackCone.direction) {
+        ctx.save();
+        ctx.translate(player.x, player.y);
+
+        const angle = Math.atan2(item.attackCone.direction.y, item.attackCone.direction.x);
+        const radius = item.attackCone.range;
+
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.arc(0, 0, radius, angle - item.attackCone.angle / 2, angle + item.attackCone.angle / 2);
+        ctx.closePath();
+
+        ctx.fillStyle = "rgba(132, 132, 132, 0.3)";
+        ctx.fill();
+        ctx.restore();
+    }
     player.health += 0.01; // Regenerate health over time
     player.update();
     player.render(ctx);
@@ -57,24 +75,8 @@ function gameLoop() {
     } else if (!paused) {
         requestAnimationFrame(gameLoop);
     }
-    const item = player.itemInHand;
-    if (item && item.attackCone && item.attackCone.direction) {
-        ctx.save();
-        ctx.translate(player.x, player.y);
-
-        const angle = Math.atan2(item.attackCone.direction.y, item.attackCone.direction.x);
-        const radius = item.attackCone.range;
-
-        ctx.beginPath();
-        ctx.moveTo(0, 0);
-        ctx.arc(0, 0, radius, angle - item.attackCone.angle / 2, angle + item.attackCone.angle / 2);
-        ctx.closePath();
-
-        ctx.fillStyle = "rgba(255, 0, 0, 0.3)";
-        ctx.fill();
-        ctx.restore();
 }
-}
+
 
 gameLoop();
 
@@ -85,7 +87,7 @@ function gameOver() {
     ctx.font = "30px Arial";
     ctx.fillText("Game Over", canvas.width / 2 - 70, canvas.height / 2);
     ctx.font = "14px Arial";
-    ctx.fillText("Click or press start to restart.", canvas.width / 2 - 80, canvas.height / 2 + 40);
+    ctx.fillText("Click or press space to restart.", canvas.width / 2 - 80, canvas.height / 2 + 40);
     requestAnimationFrame(gameOver)
 
     addEventListener("click", () => {
