@@ -11,7 +11,7 @@ class Player {
         this.height=18
         this.direction = Vector2.ZERO
         this.health=health
-        this.itemInHand = itemSlot1 // Default item in hand
+        this.itemInHand = itemSlot1
         
     }
 
@@ -23,13 +23,13 @@ class Player {
         if (keysPressed.has("1")) {
             this.itemInHand = this.itemSlot1;
         }
-        if (keysPressed.has("2")) {     
+        else if (keysPressed.has("2")) {     
             this.itemInHand = this.itemSlot2;
         }
-        if (keysPressed.has("3")) {
+        else if (keysPressed.has("3")) {
             this.itemInHand = this.itemSlot3;
         }
-        if (keysPressed.has("4")) {
+        else if (keysPressed.has("4")) {
             this.itemInHand = this.itemSlot4;
         }
 
@@ -89,7 +89,8 @@ class Player {
                 this.x-this.width*scaleFactor/2, 
                 this.y-this.height*scaleFactor/2, 
                 this.width*scaleFactor, 
-                this.height*scaleFactor)
-            }
+                this.height*scaleFactor
+            )
+        }
     }
 }

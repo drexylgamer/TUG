@@ -3,9 +3,10 @@
 
 const scaleFactor = 4
 const canvasSize = window.innerHeight
-const enemyAmount = 10
+const enemyStartAmount = 5
 const enemyScaleFactor = 2
 const enemyHealth = 10;
+const maxHealth = 100;
 
 const ACCELERATION = 2;
 const FRICTION = 0.8;

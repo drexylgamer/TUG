@@ -1,15 +1,23 @@
 // ------------
 // CONSTANTS
 // ------------
-
-const teacup = new Item("Teacup", 3, 100, 500, 45); // 500ms cooldown
-const player = new Player(400, 400, playerMaxSpeed, teacup, null, null, null, 100); // Player starts with a teacup
+const player = new Player(
+    400,
+    400,
+    playerMaxSpeed,
+    TEAPOT,
+    SWORD_IN_THE_STONE,
+    null,
+    null,
+    100
+); // Player starts with a teacup
+console.log(player.itemSlot1);
 const body = document.querySelector("body");
 var enemies = []
 var running = true;
 var paused = false;
 
-for(let i=0; i<enemyAmount; i++) {
+for(let i=0; i<enemyStartAmount; i++) {
     enemies.push(new Enemy(randomIntegerBetween(0, canvasSize), randomIntegerBetween(0, canvasSize), enemyMaxSpeed, i, enemyHealth))
 }
 
@@ -61,6 +69,9 @@ function gameLoop() {
         ctx.fill();
         ctx.restore();
     }
+    if (player.health > maxHealth) {
+        player.health = maxHealth; // Cap health at maxHealth
+    }
     player.health += 0.01; // Regenerate health over time
     player.update();
     player.render(ctx);
@@ -68,8 +79,11 @@ function gameLoop() {
         enemy.update(player, enemies);
         enemy.render(ctx);
     }
+    if (player.itemInHand) {
+        player.itemInHand.render(ctx, player);
+    }
     enemies = enemies.filter(enemy => enemy.alive);
-    randomIntegerBetween(0, 100) < 1 && enemies.push(new Enemy(randomIntegerBetween(0, canvasSize), randomIntegerBetween(0, canvasSize), enemyMaxSpeed, enemies.length, enemyHealth));
+    randomIntegerBetween(0, 200) < 1 && enemies.push(new Enemy(randomIntegerBetween(0, canvasSize), randomIntegerBetween(0, canvasSize), enemyMaxSpeed, enemies.length, enemyHealth));
     if (running==false) {
         gameOver()
     } else if (!paused) {
@@ -113,10 +127,6 @@ addEventListener("keydown", (e) => {
         }
     }
 })
-
-canvas.addEventListener("mousemove", (event) => {
-    
-});
 
 function alwaysRunning() {
     if(running) {

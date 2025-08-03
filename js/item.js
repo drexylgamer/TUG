@@ -1,6 +1,5 @@
 class Item {
-    constructor(name, damage, range, cooldown, coneAngleDegrees) {
-        this.name = name;
+    constructor(image, damage, range, cooldown, coneAngleDegrees) {
         this.damage = damage;
         this.range = range;
         this.cooldown = cooldown; // in milliseconds
@@ -12,24 +11,37 @@ class Item {
             angle: this.coneAngle, // 60 degrees
             timer: 0
         };
+        this.image = new Image();
+        this.image.src = image;
+        this.image.onload = () => {
+            this.width = this.image.width;
+            this.height = this.image.height;
+        };
 
         canvas.addEventListener("click", (event) => {
-            const rect = canvas.getBoundingClientRect();
-            const mousePos = new Vector2(event.clientX - rect.left, event.clientY - rect.top);
-
-            const attackDirection = mousePos.clone().subtract(new Vector2(player.x, player.y)).normalize();
-
-            for (const enemy of enemies) {
-                const toEnemy = new Vector2(enemy.x - player.x, enemy.y - player.y);
-                const distance = toEnemy.length();
-
-                if (distance > this.range) continue;
-
-                const angle = angleBetween(attackDirection, toEnemy);
-
-                if (angle < this.attackCone.angle) {
-                    enemy.takeDamage(this.damage); // or whatever logic you use
+            if (!paused && this.canUse() && player.itemInHand === this) {
+                const rect = canvas.getBoundingClientRect();
+                const mousePos = new Vector2(event.clientX - rect.left, event.clientY - rect.top);
+    
+                const attackDirection = mousePos.clone().subtract(new Vector2(player.x, player.y)).normalize();
+    
+                // Find all enemies hit
+                const hitEnemies = [];
+                for (const enemy of enemies) {
+                    const toEnemy = new Vector2(enemy.x - player.x, enemy.y - player.y);
+                    const distance = toEnemy.length();
+                    if (distance > this.range) continue;
+                    const angle = angleBetween(attackDirection, toEnemy);
+                    if (angle < this.attackCone.angle) {
+                        hitEnemies.push(enemy);
+                    }
+                }
+                // Split damage among hit enemies
+                const splitDamage = hitEnemies.length > 0 ? this.damage / hitEnemies.length : 0;
+                for (const enemy of hitEnemies) {
+                    enemy.takeDamage(splitDamage);
                     // Optional: apply knockback
+                    const toEnemy = new Vector2(enemy.x - player.x, enemy.y - player.y);
                     const knockback = toEnemy.clone().normalize().multiply(10);
                     enemy.x += knockback.x;
                     enemy.y += knockback.y;
@@ -42,32 +54,15 @@ class Item {
         return Date.now() - this.lastUsed >= this.cooldown;
     }
 
-    use(player, mouseX, mouseY, enemies) {
-        if (!paused && this.canUse()) {
-            const attackRange = this.range; // max distance to hit enemy
-            const coneAngle = Math.PI / 4; // 45° cone
+    
 
-            const attackDir = new Vector2(mouseX - player.x, mouseY - player.y);
-            attackDir.normalize();
-
-            for (const enemy of enemies) {
-                if (enemy && player) {
-                    const toEnemy = new Vector2(enemy.x - player.x, enemy.y - player.y);
-                    const distance = toEnemy.length();
-        
-                    if (attackRange >= distance) {
-                        const enemyDir = toEnemy.clone().normalize();
-                        const angle = Math.acos(attackDir.dot(enemyDir));
-        
-                        if (angle <= coneAngle / 2) {
-                            enemy.takeDamage(this.damage);
-                            // optional knockback:
-                            enemy.direction = enemyDir.clone().multiply(5);
-                        }
-                    }
-                }
-            }
-            this.lastUsed = Date.now();
-        }
+    render(ctx, player) {
+        ctx.drawImage(
+            this.image,
+            player.x + 10,
+            player.y,
+            this.width*2,
+            this.height*2
+        );
     }
 }
