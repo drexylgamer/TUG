@@ -1,3 +1,6 @@
 
-const TEAPOT = new Item("./assets/item/teapot.png", 3, 100, 500, 45) // Teapot
-const SWORD_IN_THE_STONE = new Item("./assets/item/sword_in_the_stone.png", 30, 500, 500, 3) // Sword in the Stone
+const TEAPOT = new Item("./assets/item/teapot.png", 10, 100, 100, 45, 2) // Teapot
+const SWORD_IN_THE_STONE = new Item("./assets/item/sword_in_the_stone.png", 30, 500, 1000, 5, 1.5) // Sword in the Stone
+const EMPTY_ITEM = new Item("./assets/item/empty.png", 0, 0, 0, 0, 1) // Empty item slot
+const SWITCH = new Item("./assets/item/switch.png", 100, 100, 5000, 360, 0.5) // Switch
+const BRICK = new Item("./assets/item/brick.png", 5, 1000, 200, 45, 2) // Switch

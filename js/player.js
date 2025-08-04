@@ -81,7 +81,7 @@ class Player {
 
     render(ctx) {
         let image = new Image
-        image.src = "./assets/player/player1.png"
+        image.src = "./assets/player/player2.png"
         image.onload = () => {
             ctx.clearRect(0, 0, canvasSize, canvasSize)
             ctx.drawImage(

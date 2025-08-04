@@ -1,5 +1,27 @@
 class Item {
-    constructor(image, damage, range, cooldown, coneAngleDegrees) {
+    renderAttackCone(ctx, player, mouseX, mouseY) {
+        // Center the cone on the middle of the player sprite (top-left + half width/height)
+        const centerX = player.x - player.width/scaleFactor;
+        const centerY = player.y + player.height/scaleFactor; // Adjusted to center on the top of the player
+        const direction = new Vector2(mouseX - centerX, mouseY - centerY).normalize();
+        const angle = Math.atan2(direction.y, direction.x);
+        ctx.save();
+        ctx.translate(centerX, centerY);
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.arc(
+            0,
+            0,
+            this.range,
+            angle - this.coneAngle / 2,
+            angle + this.coneAngle / 2
+        );
+        ctx.closePath();
+        ctx.fillStyle = "rgba(255, 113, 113, 0.3)";
+        ctx.fill();
+        ctx.restore();
+    }
+    constructor(image, damage, range, cooldown, coneAngleDegrees, scaleFactor = 1) {
         this.damage = damage;
         this.range = range;
         this.cooldown = cooldown; // in milliseconds
@@ -17,22 +39,29 @@ class Item {
             this.width = this.image.width;
             this.height = this.image.height;
         };
+        this.scaleFactor = scaleFactor;
 
         canvas.addEventListener("click", (event) => {
             if (!paused && this.canUse() && player.itemInHand === this) {
                 const rect = canvas.getBoundingClientRect();
                 const mousePos = new Vector2(event.clientX - rect.left, event.clientY - rect.top);
-    
-                const attackDirection = mousePos.clone().subtract(new Vector2(player.x, player.y)).normalize();
-    
+                // Use player center for attack direction
+                const centerX = player.x + player.width / 2;
+                const centerY = player.y + player.height / 2;
+                const attackDirection = mousePos.clone().subtract(new Vector2(centerX, centerY)).normalize();
+                const attackAngle = Math.atan2(attackDirection.y, attackDirection.x);
+                // ...existing code...
                 // Find all enemies hit
                 const hitEnemies = [];
                 for (const enemy of enemies) {
                     const toEnemy = new Vector2(enemy.x - player.x, enemy.y - player.y);
                     const distance = toEnemy.length();
                     if (distance > this.range) continue;
-                    const angle = angleBetween(attackDirection, toEnemy);
-                    if (angle < this.attackCone.angle) {
+                    const toEnemyAngle = Math.atan2(toEnemy.y, toEnemy.x);
+                    let diff = toEnemyAngle - attackAngle;
+                    // Normalize angle to [-PI, PI]
+                    diff = Math.atan2(Math.sin(diff), Math.cos(diff));
+                    if (Math.abs(diff) < this.coneAngle / 2) {
                         hitEnemies.push(enemy);
                     }
                 }
@@ -45,6 +74,10 @@ class Item {
                     const knockback = toEnemy.clone().normalize().multiply(10);
                     enemy.x += knockback.x;
                     enemy.y += knockback.y;
+                }
+                // Set cooldown after attack
+                if (hitEnemies.length > 0) {
+                    this.lastUsed = Date.now();
                 }
             }
         });
@@ -61,8 +94,8 @@ class Item {
             this.image,
             player.x + 10,
             player.y,
-            this.width*2,
-            this.height*2
+            this.width*this.scaleFactor,
+            this.height*this.scaleFactor
         );
     }
 }

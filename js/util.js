@@ -1,7 +1,7 @@
 // Constants
 
 
-const scaleFactor = 4
+const scaleFactor = 2
 const canvasSize = window.innerHeight
 const enemyStartAmount = 5
 const enemyScaleFactor = 2
@@ -11,7 +11,7 @@ const maxHealth = 100;
 const ACCELERATION = 2;
 const FRICTION = 0.8;
 const playerMaxSpeed = 10;
-const enemyMaxSpeed = 1;
+const enemyMaxSpeed = 0.75 ;
 
 const keysPressed = new Set(); 
 

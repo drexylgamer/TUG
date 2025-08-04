@@ -7,11 +7,10 @@ const player = new Player(
     playerMaxSpeed,
     TEAPOT,
     SWORD_IN_THE_STONE,
-    null,
-    null,
+    SWITCH,
+    BRICK,
     100
 ); // Player starts with a teacup
-console.log(player.itemSlot1);
 const body = document.querySelector("body");
 var enemies = []
 var running = true;
@@ -53,26 +52,11 @@ ctx.imageSmoothingEnabled = false;
 
 function gameLoop() {
     const item = player.itemInHand;
-    if (item && item.attackCone && item.attackCone.direction) {
-        ctx.save();
-        ctx.translate(player.x, player.y);
-
-        const angle = Math.atan2(item.attackCone.direction.y, item.attackCone.direction.x);
-        const radius = item.attackCone.range;
-
-        ctx.beginPath();
-        ctx.moveTo(0, 0);
-        ctx.arc(0, 0, radius, angle - item.attackCone.angle / 2, angle + item.attackCone.angle / 2);
-        ctx.closePath();
-
-        ctx.fillStyle = "rgba(132, 132, 132, 0.3)";
-        ctx.fill();
-        ctx.restore();
-    }
+    item.renderAttackCone(ctx, player, mouseX, mouseY);
     if (player.health > maxHealth) {
         player.health = maxHealth; // Cap health at maxHealth
     }
-    player.health += 0.01; // Regenerate health over time
+    player.health += 0.005; // Regenerate health over time
     player.update();
     player.render(ctx);
     for (let enemy of enemies) {
@@ -83,7 +67,7 @@ function gameLoop() {
         player.itemInHand.render(ctx, player);
     }
     enemies = enemies.filter(enemy => enemy.alive);
-    randomIntegerBetween(0, 200) < 1 && enemies.push(new Enemy(randomIntegerBetween(0, canvasSize), randomIntegerBetween(0, canvasSize), enemyMaxSpeed, enemies.length, enemyHealth));
+    randomIntegerBetween(0, 50) < 1 && enemies.push(new Enemy(randomIntegerBetween(0, canvasSize), randomIntegerBetween(0, canvasSize), enemyMaxSpeed, enemies.length, enemyHealth));
     if (running==false) {
         gameOver()
     } else if (!paused) {
