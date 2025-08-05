@@ -76,12 +76,24 @@ class Player {
         } else {
             this.direction.y = 0;
         }
+
+        groundItems.foreach((item) => {
+            if (isColliding(this, item, false)) {
+                if (item instanceof Item) {
+                    item.collect(this);
+                }
+                item.collected = true; // Mark the item as collected
+            }
+        });
+
+        // Check for item collection
+        groundItems = groundItems.filter(item => !item.collected); // Remove collected items
     }
 
 
     render(ctx) {
         let image = new Image
-        image.src = "./assets/player/player2.png"
+        image.src = "./assets/player/player1.png"
         image.onload = () => {
             ctx.clearRect(0, 0, canvasSize, canvasSize)
             ctx.drawImage(

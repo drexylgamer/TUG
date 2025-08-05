@@ -21,7 +21,7 @@ class Item {
         ctx.fill();
         ctx.restore();
     }
-    constructor(image, damage, range, cooldown, coneAngleDegrees, scaleFactor = 1) {
+    constructor(image, damage, range, cooldown, coneAngleDegrees, scaleFactor = 1, knockback = 10) {
         this.damage = damage;
         this.range = range;
         this.cooldown = cooldown; // in milliseconds
@@ -40,6 +40,7 @@ class Item {
             this.height = this.image.height;
         };
         this.scaleFactor = scaleFactor;
+        this.knockback = knockback; // Knockback strength
 
         canvas.addEventListener("click", (event) => {
             if (!paused && this.canUse() && player.itemInHand === this) {
@@ -67,11 +68,12 @@ class Item {
                 }
                 // Split damage among hit enemies
                 const splitDamage = hitEnemies.length > 0 ? this.damage / hitEnemies.length : 0;
+                const slpitKnockback = hitEnemies.length > 0 ? this.knockback / hitEnemies.length : 0;
                 for (const enemy of hitEnemies) {
                     enemy.takeDamage(splitDamage);
                     // Optional: apply knockback
                     const toEnemy = new Vector2(enemy.x - player.x, enemy.y - player.y);
-                    const knockback = toEnemy.clone().normalize().multiply(10);
+                    const knockback = toEnemy.clone().normalize().multiply(slpitKnockback);
                     enemy.x += knockback.x;
                     enemy.y += knockback.y;
                 }

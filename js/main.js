@@ -12,6 +12,7 @@ const player = new Player(
     100
 ); // Player starts with a teacup
 const body = document.querySelector("body");
+const groundItems = [];
 var enemies = []
 var running = true;
 var paused = false;
