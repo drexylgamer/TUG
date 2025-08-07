@@ -18,8 +18,10 @@ var running = true;
 var paused = false;
 
 for(let i=0; i<enemyStartAmount; i++) {
-    enemies.push(new Enemy(randomIntegerBetween(0, canvasSize), randomIntegerBetween(0, canvasSize), enemyMaxSpeed, i, enemyHealth))
+    enemies.push(new Enemy(randomIntegerBetween(0, canvasSizeX), randomIntegerBetween(0, canvasSizeY), enemyMaxSpeed, i, enemyHealth))
 }
+
+
 
 // ------------
 // INPUT
@@ -39,12 +41,18 @@ window.addEventListener("click", (e) => {
     e.preventDefault()
 })
 
+window.addEventListener('resize', () => {
+    canvas.width = canvasSizeX = window.innerWidth;
+    canvas.height = canvasSizeY = window.innerHeight;
+    ctx.imageSmoothingEnabled = false;
+});
+
 // ------------
 // CANVAS
 // ------------
 
-canvas.width = canvasSize;
-canvas.height = canvasSize;
+canvas.width = canvasSizeX;
+canvas.height = canvasSizeY;
 ctx.imageSmoothingEnabled = false;
 
 // ------------
@@ -52,6 +60,7 @@ ctx.imageSmoothingEnabled = false;
 // ------------
 
 function gameLoop() {
+    ctx.clearRect(0, 0, canvasSizeX, canvasSizeY);
     const item = player.itemInHand;
     item.renderAttackCone(ctx, player, mouseX, mouseY);
     if (player.health > maxHealth) {
@@ -59,16 +68,36 @@ function gameLoop() {
     }
     player.health += 0.005; // Regenerate health over time
     player.update();
+    // Draw player
     player.render(ctx);
+    // Draw ground items first
+    groundItems.forEach(item => item.render(ctx));
+    // Draw item in hand
+    if (player.itemInHand) {
+        player.itemInHand.render(ctx, player);
+    }
+    // Draw enemies
     for (let enemy of enemies) {
         enemy.update(player, enemies);
         enemy.render(ctx);
     }
-    if (player.itemInHand) {
-        player.itemInHand.render(ctx, player);
+    if (randomIntegerBetween(0, 500) < 1) {
+        groundItem = GroundItem.randomItem();
+        groundItems.push(new GroundItem(
+            groundItem.image.src,
+            randomIntegerBetween(0, canvasSizeX),
+            randomIntegerBetween(0, canvasSizeY),
+            groundItem.xpAmount,
+            groundItem.healthAmount,
+            groundItem.rangeAmount,
+            groundItem.attackConeAmount,
+            groundItem.damageAmount,
+            groundItem.scaleFactor
+            
+        ));
     }
     enemies = enemies.filter(enemy => enemy.alive);
-    randomIntegerBetween(0, 50) < 1 && enemies.push(new Enemy(randomIntegerBetween(0, canvasSize), randomIntegerBetween(0, canvasSize), enemyMaxSpeed, enemies.length, enemyHealth));
+    randomIntegerBetween(0, 50) < 1 && enemies.push(new Enemy(randomIntegerBetween(0, canvasSizeX), randomIntegerBetween(0, canvasSizeY), enemyMaxSpeed, enemies.length, enemyHealth));
     if (running==false) {
         gameOver()
     } else if (!paused) {
@@ -139,5 +168,6 @@ function alwaysRunning() {
         ctx.font = "30px Arial";
         ctx.fillText("Paused", canvas.width / 2 - 50, canvas.height / 2);
     }
+
 }
 alwaysRunning()

@@ -58,8 +58,8 @@ class Enemy {
         this.y += this.velocity.y;
 
         // --- Keep within bounds ---
-        this.x = Math.max(this.width, Math.min(canvasSize - this.width, this.x));
-        this.y = Math.max(this.height, Math.min(canvasSize - this.height, this.y));
+        this.x = Math.max(this.width, Math.min(canvasSizeX - this.width, this.x));
+        this.y = Math.max(this.height, Math.min(canvasSizeY - this.height, this.y));
     }
 
     render(ctx) {

@@ -26,6 +26,8 @@ h1 {
     background-repeat: repeat;
     border: 5px solid black;
     image-rendering: pixelated;
+    width: 100vw;
+    height: 100vh;
 }
 div {
     top: 10px;

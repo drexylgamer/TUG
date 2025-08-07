@@ -12,7 +12,16 @@ class Player {
         this.direction = Vector2.ZERO
         this.health=health
         this.itemInHand = itemSlot1
-        
+        this.xp = 0
+        this.range = 0
+        this.attackCone = 0
+        this.damage = 0
+        this.scaleFactor = scaleFactor;
+        this.lastUsed = 0; // Track last used time for cooldown
+        this.image = new Image();
+        this.image.src = "./assets/player/player1.png"; 
+        this.image.onload = () => {
+        }
     }
 
     update() {
@@ -65,44 +74,47 @@ class Player {
         const halfH = (this.height * scaleFactor) / 2;
 
         // Apply canvas boundary collision
-        if (nextX - halfW >= 0 && nextX + halfW <= canvasSize) {
+        if (nextX - halfW >= 0 && nextX + halfW <= canvasSizeX) {
             this.x = nextX;
         } else {
             this.direction.x = 0;
         }
 
-        if (nextY - halfH >= 0 && nextY + halfH <= canvasSize) {
+        if (nextY - halfH >= 0 && nextY + halfH <= canvasSizeY) {
             this.y = nextY;
         } else {
             this.direction.y = 0;
         }
 
-        groundItems.foreach((item) => {
-            if (isColliding(this, item, false)) {
-                if (item instanceof Item) {
-                    item.collect(this);
-                }
-                item.collected = true; // Mark the item as collected
-            }
-        });
+        if (this.y > canvasSizeY) {
+            this.y = canvasSizeY- this.height/2*this.scaleFactor
+        }
+        if (this.x > canvasSizeX) {
+            this.x = canvasSizeX- this.width/2*this.scaleFactor
+        }
 
-        // Check for item collection
-        groundItems = groundItems.filter(item => !item.collected); // Remove collected items
+        if (groundItems && groundItems.length > 0) {
+            groundItems.forEach((item) => {
+                if (item.isColliding(this)) {
+                    if (item instanceof Item) {
+                        item.collect(this);
+                    }
+                    item.collected = true; // Mark the item as collected
+                }
+            });
+            // Remove collected items
+            groundItems.splice(0, groundItems.length, ...groundItems.filter(item => !item.collected));
+        }
     }
 
 
     render(ctx) {
-        let image = new Image
-        image.src = "./assets/player/player1.png"
-        image.onload = () => {
-            ctx.clearRect(0, 0, canvasSize, canvasSize)
-            ctx.drawImage(
-                image, 
-                this.x-this.width*scaleFactor/2, 
-                this.y-this.height*scaleFactor/2, 
-                this.width*scaleFactor, 
-                this.height*scaleFactor
-            )
-        }
+        ctx.drawImage(
+            this.image,
+            this.x-this.width*scaleFactor/2,
+            this.y-this.height*scaleFactor/2,
+            this.width*scaleFactor,
+            this.height*scaleFactor
+        );
     }
 }

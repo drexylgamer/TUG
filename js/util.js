@@ -1,8 +1,8 @@
 // Constants
 
-
 const scaleFactor = 4
-const canvasSize = window.innerHeight
+var canvasSizeX = window.innerWidth
+var canvasSizeY = window.innerHeight
 const enemyStartAmount = 5
 const enemyScaleFactor = 2
 const enemyHealth = 10;

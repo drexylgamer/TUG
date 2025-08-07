@@ -1,4 +1,4 @@
-class groundItem {
+class GroundItem {
     constructor(image, x, y, xpAmount, healthAmount, rangeAmount, attackConeAmount, damageAmount, scaleFactor = 1) {
         this.image = new Image();
         this.image.src = image; // Load the image
@@ -19,15 +19,18 @@ class groundItem {
         this.height *= scaleFactor; // Scale the height
     }
     render(ctx) {
-        if (!this.collected) {
-            ctx.drawImage(
-                this.image,
-                this.x - this.width / 2,
-                this.y - this.height / 2,
-                this.width,
-                this.height
-            );
+        console.log("Rendering ground item at", this.x, this.y);
+        if (!this.image.complete) {
+            console.error("Image not loaded yet:", this.image.src);
+            return; // Exit if the image is not loaded
         }
+        ctx.drawImage(
+            this.image,
+            this.x - this.width / 2,
+            this.y - this.height / 2,
+            this.width,
+            this.height
+        );
     }
 
     collect(player) {
@@ -47,5 +50,12 @@ class groundItem {
             player.y - player.height * scaleFactor / 2 < this.y - this.height / 2 + this.height &&
             player.y - player.height * scaleFactor / 2 + player.height * scaleFactor > this.y - this.height / 2
         );
+    }
+
+    static randomItem() {
+        const items = [
+            BURGER
+        ];
+        return items[Math.floor(Math.random() * items.length)];
     }
 }
