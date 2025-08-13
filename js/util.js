@@ -3,6 +3,7 @@
 const scaleFactor = 4
 var canvasSizeX = window.innerWidth
 var canvasSizeY = window.innerHeight
+var enemyChance = 50; // Chance to spawn an enemy each frame
 const enemyStartAmount = 5
 const enemyScaleFactor = 2
 const enemyHealth = 10;

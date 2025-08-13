@@ -15,28 +15,26 @@ class GroundItem {
         this.rangeAmount = rangeAmount; // Amount of range to increase
         this.attackConeAmount = attackConeAmount; // Amount of attack cone to increase
         this.damageAmount = damageAmount; // Amount of damage to increase
-        this.width *= scaleFactor; // Scale the width
-        this.height *= scaleFactor; // Scale the height
     }
     render(ctx) {
-        console.log("Rendering ground item at", this.x, this.y);
-        if (!this.image.complete) {
-            console.error("Image not loaded yet:", this.image.src);
-            return; // Exit if the image is not loaded
+        if (!this.collected) {
+            ctx.drawImage(
+                this.image, 
+                this.x - this.width / 2,
+                this.y - this.height / 2,
+                this.width,
+                this.height
+            );
         }
-        ctx.drawImage(
-            this.image,
-            this.x - this.width / 2,
-            this.y - this.height / 2,
-            this.width,
-            this.height
-        );
     }
 
     collect(player) {
         if (!this.collected) {
             player.xp += this.xpAmount; // Increase player's XP
-            player.health = Math.min(player.maxHealth, player.health + this.healthAmount); // Restore health without exceeding max health
+            player.health += this.healthAmount; // Restore health
+            if (player.health > maxHealth) {
+                player.health = maxHealth; // Cap health at maxHealth
+            }
             player.range += this.rangeAmount; // Increase range
             player.attackCone += this.attackConeAmount; // Increase attack cone
             player.damage += this.damageAmount; // Increase damage
@@ -54,7 +52,9 @@ class GroundItem {
 
     static randomItem() {
         const items = [
-            BURGER
+            BURGER,
+            POISONOUS_GRAPE,
+            BOLT
         ];
         return items[Math.floor(Math.random() * items.length)];
     }

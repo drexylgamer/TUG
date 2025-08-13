@@ -1,6 +1,7 @@
 // ------------
 // CONSTANTS
 // ------------
+
 const player = new Player(
     400,
     400,
@@ -16,10 +17,6 @@ const groundItems = [];
 var enemies = []
 var running = true;
 var paused = false;
-
-for(let i=0; i<enemyStartAmount; i++) {
-    enemies.push(new Enemy(randomIntegerBetween(0, canvasSizeX), randomIntegerBetween(0, canvasSizeY), enemyMaxSpeed, i, enemyHealth))
-}
 
 
 
@@ -71,7 +68,10 @@ function gameLoop() {
     // Draw player
     player.render(ctx);
     // Draw ground items first
-    groundItems.forEach(item => item.render(ctx));
+    for (let i=0; i < groundItems.length; i++) {
+        if (groundItems[i].collected) continue; // Skip collected items
+        groundItems[i].render(ctx);
+    }
     // Draw item in hand
     if (player.itemInHand) {
         player.itemInHand.render(ctx, player);
@@ -81,7 +81,7 @@ function gameLoop() {
         enemy.update(player, enemies);
         enemy.render(ctx);
     }
-    if (randomIntegerBetween(0, 500) < 1) {
+    if (randomIntegerBetween(0, 1) < 1 && groundItems.length < 5) {
         groundItem = GroundItem.randomItem();
         groundItems.push(new GroundItem(
             groundItem.image.src,
@@ -93,16 +93,21 @@ function gameLoop() {
             groundItem.attackConeAmount,
             groundItem.damageAmount,
             groundItem.scaleFactor
-            
         ));
     }
     enemies = enemies.filter(enemy => enemy.alive);
-    randomIntegerBetween(0, 50) < 1 && enemies.push(new Enemy(randomIntegerBetween(0, canvasSizeX), randomIntegerBetween(0, canvasSizeY), enemyMaxSpeed, enemies.length, enemyHealth));
+    if (enemies.length < 1000) {
+        randomIntegerBetween(0, enemyChance) < 1 && enemies.push(new Enemy(randomIntegerBetween(0, canvasSizeX), randomIntegerBetween(0, canvasSizeY), enemyMaxSpeed, enemies.length, enemyHealth));
+    }
     if (running==false) {
         gameOver()
     } else if (!paused) {
         requestAnimationFrame(gameLoop);
     }
+    if (enemyChance < 1) {
+        enemyChance = 1; // Prevents enemyChance from going below 1
+    }
+    enemyChance -= 0.01; // Gradually increase enemy spawn chance
 }
 
 

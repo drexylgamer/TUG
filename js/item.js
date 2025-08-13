@@ -12,9 +12,9 @@ class Item {
         ctx.arc(
             0,
             0,
-            this.range,
-            angle - this.coneAngle / 2,
-            angle + this.coneAngle / 2
+            this.range + player.range,
+            angle - (this.coneAngle + player.attackCone * Math.PI/180) / 2,
+            angle + (this.coneAngle + player.attackCone * Math.PI/180) / 2
         );
         ctx.closePath();
         ctx.fillStyle = "rgba(255, 113, 113, 0.3)";
@@ -57,17 +57,17 @@ class Item {
                 for (const enemy of enemies) {
                     const toEnemy = new Vector2(enemy.x - player.x, enemy.y - player.y);
                     const distance = toEnemy.length();
-                    if (distance > this.range) continue;
+                    if (distance > this.range + player.range) continue;
                     const toEnemyAngle = Math.atan2(toEnemy.y, toEnemy.x);
                     let diff = toEnemyAngle - attackAngle;
                     // Normalize angle to [-PI, PI]
                     diff = Math.atan2(Math.sin(diff), Math.cos(diff));
-                    if (Math.abs(diff) < this.coneAngle / 2) {
+                    if (Math.abs(diff) < (this.coneAngle + player.attackCone* Math.PI / 180) / 2) {
                         hitEnemies.push(enemy);
                     }
                 }
                 // Split damage among hit enemies
-                const splitDamage = hitEnemies.length > 0 ? this.damage / hitEnemies.length : 0;
+                const splitDamage = hitEnemies.length > 0 ? this.damage + player.damage / hitEnemies.length : 0;
                 const slpitKnockback = hitEnemies.length > 0 ? this.knockback / hitEnemies.length : 0;
                 for (const enemy of hitEnemies) {
                     enemy.takeDamage(splitDamage);

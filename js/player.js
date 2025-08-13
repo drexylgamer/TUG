@@ -96,13 +96,9 @@ class Player {
         if (groundItems && groundItems.length > 0) {
             groundItems.forEach((item) => {
                 if (item.isColliding(this)) {
-                    if (item instanceof Item) {
-                        item.collect(this);
-                    }
-                    item.collected = true; // Mark the item as collected
+                    item.collect(this)
                 }
             });
-            // Remove collected items
             groundItems.splice(0, groundItems.length, ...groundItems.filter(item => !item.collected));
         }
     }
