@@ -9,3 +9,5 @@ const BRICK = new Item("./assets/item/brick.png", 1, 250, 50, 45, 2, 50) // Bric
 const BURGER = new GroundItem("./assets/item/borgor.png", null, null, 0, 50, 0, 0, 1, 1); // Burger
 const POISONOUS_GRAPE = new GroundItem("./assets/item/poisonous_grape.png", null, null, 0, -10, 0, 0, 10, 1); // Poisonous Grape
 const BOLT = new GroundItem("./assets/item/bolt.png", null, null, 0, 0, 10, 10, 0, 0.25); // Bolt
+const PILE_OF_RUSTY_SH_T = new GroundItem("./assets/item/pile of rusty sh-t.png", null, null, 0, -50, 100, 100, 100, 0.075, 0.25); // Pile of Rusty Sh*t
+const MAX_GROUND_ITEMS = 10; // Maximum number of ground items on the map

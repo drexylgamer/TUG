@@ -1,5 +1,5 @@
 class GroundItem {
-    constructor(image, x, y, xpAmount, healthAmount, rangeAmount, attackConeAmount, damageAmount, scaleFactor = 1) {
+    constructor(image, x, y, xpAmount, healthAmount, rangeAmount, attackConeAmount, damageAmount, scaleFactor = 1, chanceOfSpawning=1) {
         this.image = new Image();
         this.image.src = image; // Load the image
         this.image.onload = () => {
@@ -15,6 +15,7 @@ class GroundItem {
         this.rangeAmount = rangeAmount; // Amount of range to increase
         this.attackConeAmount = attackConeAmount; // Amount of attack cone to increase
         this.damageAmount = damageAmount; // Amount of damage to increase
+        this.chanceOfSpawning = chanceOfSpawning; // Chance of spawning this item
     }
     render(ctx) {
         if (!this.collected) {
@@ -54,8 +55,18 @@ class GroundItem {
         const items = [
             BURGER,
             POISONOUS_GRAPE,
-            BOLT
+            BOLT,
+            PILE_OF_RUSTY_SH_T
         ];
-        return items[Math.floor(Math.random() * items.length)];
+            // Calculate total weight
+            const totalWeight = items.reduce((sum, item) => sum + (item.chanceOfSpawning || 1), 0);
+            let rand = Math.random() * totalWeight;
+            for (const item of items) {
+                rand -= (item.chanceOfSpawning || 1);
+                if (rand <= 0) {
+                    return item;
+                }
+            }
+            return items[0]; // fallback
     }
 }

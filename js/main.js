@@ -10,15 +10,13 @@ const player = new Player(
     SWORD_IN_THE_STONE,
     SWITCH,
     BRICK,
-    100
+    maxHealth
 ); // Player starts with a teacup
 const body = document.querySelector("body");
 const groundItems = [];
 var enemies = []
 var running = true;
 var paused = false;
-
-
 
 // ------------
 // INPUT
@@ -81,7 +79,7 @@ function gameLoop() {
         enemy.update(player, enemies);
         enemy.render(ctx);
     }
-    if (randomIntegerBetween(0, 1) < 1 && groundItems.length < 5) {
+    if (randomIntegerBetween(0, 1) < 1 && groundItems.length < MAX_GROUND_ITEMS) {
         groundItem = GroundItem.randomItem();
         groundItems.push(new GroundItem(
             groundItem.image.src,
@@ -97,7 +95,25 @@ function gameLoop() {
     }
     enemies = enemies.filter(enemy => enemy.alive);
     if (enemies.length < 1000) {
-        randomIntegerBetween(0, enemyChance) < 1 && enemies.push(new Enemy(randomIntegerBetween(0, canvasSizeX), randomIntegerBetween(0, canvasSizeY), enemyMaxSpeed, enemies.length, enemyHealth));
+            if (randomIntegerBetween(0, 50) < 1) {
+                // Spawn near edge: pick a random edge, then a random position along that edge
+                let x, y;
+                const edge = randomIntegerBetween(0, 3); // 0=top, 1=right, 2=bottom, 3=left
+                if (edge === 0) { // top
+                    x = randomIntegerBetween(0, canvasSizeX);
+                    y = randomIntegerBetween(0, 40);
+                } else if (edge === 1) { // right
+                    x = canvasSizeX - randomIntegerBetween(0, 40);
+                    y = randomIntegerBetween(0, canvasSizeY);
+                } else if (edge === 2) { // bottom
+                    x = randomIntegerBetween(0, canvasSizeX);
+                    y = canvasSizeY - randomIntegerBetween(0, 40);
+                } else { // left
+                    x = randomIntegerBetween(0, 40);
+                    y = randomIntegerBetween(0, canvasSizeY);
+                }
+                enemies.push(new Enemy(x, y, enemyMaxSpeed, enemies.length, enemyHealth));
+            }
     }
     if (running==false) {
         gameOver()
@@ -108,6 +124,7 @@ function gameLoop() {
         enemyChance = 1; // Prevents enemyChance from going below 1
     }
     enemyChance -= 0.01; // Gradually increase enemy spawn chance
+    drawNumber(player.health, ctx);
 }
 
 
@@ -154,10 +171,9 @@ function alwaysRunning() {
             enemy.render(ctx);
         }
         drawNumber(player.health, ctx);
-        requestAnimationFrame(alwaysRunning);
     }
     const rect = canvas.getBoundingClientRect();
-
+    
     // Update direction
     const dx = mouseX - player.x;
     const dy = mouseY - player.y;
@@ -173,6 +189,6 @@ function alwaysRunning() {
         ctx.font = "30px Arial";
         ctx.fillText("Paused", canvas.width / 2 - 50, canvas.height / 2);
     }
-
+    requestAnimationFrame(alwaysRunning);
 }
 alwaysRunning()
